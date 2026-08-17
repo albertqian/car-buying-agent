@@ -1,0 +1,81 @@
+name: Car Leads — Daily Scrape
+
+on:
+  # ── Scheduled: every day at 9 AM Pacific (UTC-7 = 16:00 UTC) ──────────────
+  schedule:
+    - cron: "0 16 * * *"
+
+  # ── On-demand: triggered via Streamlit "Refresh Now" button ───────────────
+  # Streamlit calls POST /repos/{owner}/{repo}/dispatches with event_type=refresh
+  repository_dispatch:
+    types: [refresh]
+
+  # ── Manual trigger from GitHub Actions UI ─────────────────────────────────
+  workflow_dispatch:
+    inputs:
+      city:
+        description: "City to search (e.g. los angeles)"
+        required: false
+        default: "los angeles"
+      zip_code:
+        description: "ZIP code for Autotrader radius"
+        required: false
+        default: "90001"
+      max_price:
+        description: "Max price (USD)"
+        required: false
+        default: "30000"
+      min_mpg:
+        description: "Minimum MPG"
+        required: false
+        default: "25"
+      makes:
+        description: "Comma-separated makes"
+        required: false
+        default: "honda,toyota,hyundai,ford,gm"
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # needed to commit results.json back to repo
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # ── Resolve inputs: prefer workflow_dispatch, then repository_dispatch
+      #    payload, then fall back to repo-level secrets/defaults ─────────────
+      - name: Resolve scraper parameters
+        id: params
+        run: |
+          echo "CITY=${{ github.event.inputs.city || github.event.client_payload.city || secrets.DEFAULT_CITY || 'los angeles' }}" >> $GITHUB_OUTPUT
+          echo "ZIP=${{ github.event.inputs.zip_code || github.event.client_payload.zip_code || secrets.DEFAULT_ZIP || '90001' }}" >> $GITHUB_OUTPUT
+          echo "MAX_PRICE=${{ github.event.inputs.max_price || github.event.client_payload.max_price || '30000' }}" >> $GITHUB_OUTPUT
+          echo "MIN_MPG=${{ github.event.inputs.min_mpg || github.event.client_payload.min_mpg || '25' }}" >> $GITHUB_OUTPUT
+          echo "MAKES=${{ github.event.inputs.makes || github.event.client_payload.makes || 'honda,toyota,hyundai,ford,gm' }}" >> $GITHUB_OUTPUT
+
+      - name: Run scraper
+        run: |
+          python scraper.py \
+            --city      "${{ steps.params.outputs.CITY }}" \
+            --zip       "${{ steps.params.outputs.ZIP }}" \
+            --max-price "${{ steps.params.outputs.MAX_PRICE }}" \
+            --min-mpg   "${{ steps.params.outputs.MIN_MPG }}" \
+            --makes     "${{ steps.params.outputs.MAKES }}"
+
+      - name: Commit results back to repo
+        run: |
+          git config user.name  "car-leads-bot"
+          git config user.email "bot@car-leads"
+          git add data/results.json
+          git diff --cached --quiet || git commit -m "chore: update car leads [$(date -u '+%Y-%m-%d %H:%M UTC')]"
+          git push
