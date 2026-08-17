@@ -1,1 +1,18 @@
-{"listings":[],"last_updated":null,"params":{},"count":0}
+{
+  "last_updated": "2026-08-17T22:00:43.635194",
+  "params": {
+    "city": "los angeles",
+    "zip_code": "90001",
+    "max_price": 30000,
+    "min_mpg": 25,
+    "makes": [
+      "honda",
+      "toyota",
+      "hyundai",
+      "ford",
+      "gm"
+    ]
+  },
+  "count": 0,
+  "listings": []
+}
