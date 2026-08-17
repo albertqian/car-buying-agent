@@ -1,10 +1,10 @@
 {
-  "last_updated": "2026-08-17T22:23:30.174284",
+  "last_updated": "2026-08-17T22:27:59.158245",
   "params": {
-    "city": "san mateo",
-    "zip_code": "94402",
-    "max_price": 43000,
-    "min_mpg": 25,
+    "city": "los angeles",
+    "zip_code": "90001",
+    "max_price": 250000,
+    "min_mpg": 5,
     "makes": [
       "honda",
       "toyota",
