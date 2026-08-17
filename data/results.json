@@ -1,9 +1,9 @@
 {
-  "last_updated": "2026-08-17T22:00:43.635194",
+  "last_updated": "2026-08-17T22:16:27.866426",
   "params": {
     "city": "los angeles",
     "zip_code": "90001",
-    "max_price": 30000,
+    "max_price": 60000,
     "min_mpg": 25,
     "makes": [
       "honda",
