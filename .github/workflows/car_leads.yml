@@ -24,7 +24,7 @@ on:
       max_price:
         description: "Max price (USD)"
         required: false
-        default: "2500000"
+        default: "2000000"
       min_mpg:
         description: "Minimum MPG"
         required: false
