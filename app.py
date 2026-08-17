@@ -95,8 +95,8 @@ st.markdown("""
 # ── Constants ─────────────────────────────────────────────────────────────────
 
 DATA_PATH    = Path("data/results.json")
-GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")          # set in Streamlit secrets
-GITHUB_REPO  = os.environ.get("GITHUB_REPO", "owner/repo") # e.g. "albertlisa/car-leads"
+CAR_GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")          # set in Streamlit secrets
+CAR_GITHUB_REPO  = os.environ.get("GITHUB_REPO", "owner/repo") # e.g. "albertlisa/car-leads"
 
 MAKE_OPTIONS  = ["All", "Honda", "Toyota", "Hyundai", "Ford", "GMC"]
 PRICE_MAX     = 30_000
