@@ -101,8 +101,8 @@ st.write("TOKEN present:", bool(GITHUB_TOKEN))
 st.write("REPO value:", GITHUB_REPO)
 
 MAKE_OPTIONS  = ["All", "Honda", "Toyota", "Hyundai", "Ford", "GMC"]
-PRICE_MAX     = 60_000
-MPG_MIN_FLOOR = 15
+PRICE_MAX     = 200_000
+MPG_MIN_FLOOR = 0
 
 # ── Data loading ──────────────────────────────────────────────────────────────
 
@@ -174,7 +174,7 @@ with st.sidebar:
     max_price_filter = st.slider(
         "Max Price",
         min_value=5_000,
-        max_value=30_000,
+        max_value=200_000,
         value=30_000,
         step=500,
         format="$%d",
